@@ -119,6 +119,10 @@ body.caboed #alarm{opacity:1;animation:alm 1.1s ease-in-out infinite alternate}@
 .pn.cabop .av{animation:avj .5s linear infinite}@keyframes avj{25%{translate:-2px 1px}75%{translate:2px -1px}}
 .fx.xmark{display:grid;place-items:center;color:var(--c);filter:drop-shadow(0 0 10px var(--c));animation:xm 1.4s ease forwards}.fx.xmark svg{width:70%}
 @keyframes xm{0%{transform:scale(2.2);opacity:0}18%{transform:scale(1);opacity:1}85%{opacity:1}100%{opacity:0}}
+.c.sel,.c.cl.sel{outline:4px solid #ffe08a;outline-offset:3px;box-shadow:0 0 0 3px #f2b632,0 0 24px 5px #f2b632bb;z-index:6}
+.c.cl.sel{animation:sway 2.2s ease-in-out infinite alternate,selp .8s ease-in-out infinite alternate}
+@keyframes selp{from{box-shadow:0 0 0 3px #f2b632,0 0 12px 2px #f2b63288}to{box-shadow:0 0 0 3px #ffd36b,0 0 32px 9px #f2b632dd}}
+.c.cl.sel:hover{transform:translateY(-14px) scale(1.08)}
 @media(prefers-reduced-motion:reduce){*{animation:none!important}}
 .nm{display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px}
 .pt{display:inline-flex;align-items:baseline;gap:4px;background:#0a1428;border:2px solid var(--gd);color:var(--gd);border-radius:4px;padding:0 6px;font-size:15px;line-height:1.3;white-space:nowrap}
