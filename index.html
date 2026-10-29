@@ -174,7 +174,7 @@ html.pre header h1,html.pre #sub,html.pre #crtc,html.pre #app{opacity:0}
 .ghost{position:fixed}
 
 #rl.vi #rb,#rl.vi #rt,.vf{font-family:"SVN",ui-sans-serif,sans-serif}
-#rl.vi #rb{font-size:22px}#rl.vi #rb h3{font-size:26px}#rl.vi #rb h4{font-size:22px}
+#rl.vi #rb{font-size:22px}#rl.vi #rb h3{font-size:26px}#rl.vi #rb h4{font-size:22px}#rb h5{font-size:18px;font-weight:400;letter-spacing:1px;margin:14px 0 2px;color:#fff}
 #lv{position:fixed;inset:0;z-index:45;display:grid;place-items:center;visibility:hidden;background:rgba(0,0,0,0);transition:background .4s ease,visibility 0s linear .4s}
 #lv.on{visibility:visible;background:rgba(0,0,0,.74);transition:background .4s ease,visibility 0s}
 .lvb{width:min(460px,88vw);box-sizing:border-box;background:#0b1630;border:3px solid var(--ln);border-radius:6px;padding:26px 24px 22px;text-align:center;box-shadow:0 10px 0 #0006;transform-origin:center}
@@ -456,313 +456,339 @@ A.innerHTML=`<div class="wrap"><div><div id="opps">${Array.from({length:n-1},(_,
 const PX=(rows,cls)=>{let d='';rows.forEach((r,y)=>{let x=0;while(x<r.length){if(r[x]=='X'){let w=1;while(r[x+w]=='X')w++;d+='M'+x+' '+y+'h'+w+'v1h-'+w+'z';x+=w}else x++}});return '<svg class="ic '+(cls||'')+'" viewBox="0 0 '+rows[0].length+' '+rows.length+'" shape-rendering="crispEdges" fill="currentColor" aria-hidden="true"><path d="'+d+'"/></svg>'};
 const IC={undo:PX(["............", "...X........", "..XX........", ".XXXXXXXXXXX", ".XXXXXXXXXXX", "..XX......XX", "...X......XX", "..........XX", "..........XX", "..XXXXXXXXXX", "..XXXXXXXXXX", "............"]),play:PX(["X....", "XX...", "XXX..", "XXXX.", "XXXXX", "XXXX.", "XXX..", "XX...", "X...."]),back:PX(["....X", "...XX", "..XXX", ".XXXX", "XXXXX", ".XXXX", "..XXX", "...XX", "....X"]),dot:PX([".XXX.", "XXXXX", "XXXXX", "XXXXX", ".XXX."]),reset:PX(["...............", ".....XXXXX.....", "...XXXXXXXXX...", "..XXX.....XXX..", "..XX.......XXXX", "..X........XXXX", "..........XXXXX", "XXX.........XXX", "XXXXX..........", "XXXX........X..", "XXXX.......XX..", "..XXX.....XXX..", "...XXXXXXXXX...", ".....XXXXX.....", "..............."])},AV=[PX(["....X....", "...XXX...", "...XXX...", "..XXXXX..", "..XXXXX..", ".XXXXXXX.", ".XXXXXXX.", "XXXXXXXXX", "XXXXXXXXX"]),PX(["..XXXXX..", ".X.....X.", "X..XXX..X", "X.XXXXX.X", "X.XXXXX.X", "X.XXXXX.X", "X..XXX..X", ".X.....X.", "..XXXXX.."]),PX([".........", ".X...X...", "X.X.X.X..", "...X...X.", ".........", ".X...X...", "X.X.X.X..", "...X...X.", "........."]),PX(["..XXXXX..", ".XXXXXXX.", "XXXXXXXXX", "XXXXXXXXX", "XXXXXXXXX", "XXXXXXXXX", "XXXXXXXXX", ".XXXXXXX.", "..XXXXX.."]),PX(["....X....", "...XXX...", "..XXXXX..", ".XXXXXXX.", "XXXXXXXXX", ".XXXXXXX.", "..XXXXX..", "...XXX...", "....X...."]),PX(["....X....", "....X....", "...XXX...", "XXXXXXXXX", ".XXXXXXX.", "..XXXXX..", "..XX.XX..", ".XX...XX.", ".X.....X."])];
 const RULES={en:`# 1. OBJECTIVE
-The objective of CABO is to become the player with the lowest total value across their four cards.
-The unique challenge of CABO is that at the beginning of the game, you do not know all of your own cards. You must memorize the positions of your cards, use special card abilities to gather information, spy on your opponents, and look for opportunities to replace high-value cards.
-When you believe that your total score is the lowest, you may call “CABO!” to end the round. However, all other players are still allowed to take one final turn.
-If your prediction is correct, you win the round and your points are reduced as a reward. If you are wrong, your points are increased as a penalty.
+The objective of CABO is to finish the round with the lowest total value across your four cards.
+At the beginning of the game, you only know the values of some of your own cards. You must memorize their positions, use special card abilities to gather information, observe your opponents, and replace high-value cards whenever possible.
+When you believe your total score is the lowest, you may call “CABO!” to end your participation in the round. All other players then receive one final turn.
+If your call is correct, you receive a reward. If your call is incorrect, you receive a penalty.
 # 2. NUMBER OF PLAYERS
-2-6 players.
+CABO supports 2–6 players.
 # 3. GAME SETUP
-Each player receives 4 cards and places them face down in front of themselves.
-The four cards must remain in four fixed positions throughout the round.
-Players may not rearrange or shuffle their four cards.
+1. Shuffle the deck and place it face down to form the draw pile.
+2. Each player receives four cards.
+3. Place your four cards face down in front of you.
+4. Keep your four cards in fixed positions throughout the round. You may not rearrange them unless an ability specifically allows it.
+5. Place the appropriate discard piles face up so that players can take cards from them according to the turn rules.
 ## First Turn
-Each player may:
-1. Secretly look at 2 of their 4 cards.
-2. Memorize the value and position of those 2 cards.
-3. Place the cards face down again in their original positions.
-4. Make sure that no other player sees them.
-Remember them carefully! You may not look at these two cards again unless you use an appropriate card ability.
+At the beginning of the round, each player may:
+1. Secretly look at two of their four cards.
+2. Memorize the value and position of those cards.
+3. Return the cards face down to their original positions.
+You may not look at these cards again unless a card ability allows you to do so.
 # 4. CARD VALUES
-Cards are scored according to the number shown on the card.
-## {V:KING OF VOID} - *0* POINTS
-The {V:King of Void} is worth *0* points.
-This is an especially valuable low-point card to keep.
-The other three *Kings* ({F:Flame}, {C:Coin} and {M:Mist}) are worth *13* points each.
+Each card contributes its value to your total score. The card values are determined by their rank:
+• *A* = *1 point*
+• *2* = *2 points*
+• *3* = *3 points*
+• *4* = *4 points*
+• *5* = *5 points*
+• *6* = *6 points*
+• *7* = *7 points*
+• *8* = *8 points*
+• *9* = *9 points*
+• *10* = *10 points*
+• *J* = *11 points*
+• *Q* = *12 points*
+• *K* = *13 points*, except for the {V:KING OF VOID}, which is worth *0 points*.
 # 5. SPECIAL ABILITY CARDS
-The special cards are the *7*, the *8*, the *9*, the {F:King of Flame}, the {C:King of Coin} and the {M:King of Mist}.
-Special cards can only be activated when you draw them from the draw pile.
-You may choose to use or not use a special ability. If you do not use it, the card is treated as a normal card.
-## *7* - PEEK AT YOUR OWN CARD
+Special ability cards are the *7*, *8*, *9*, {F:King of Flame}, {C:King of Coin}, and {M:King of Mist}.
+*A special ability can only be activated when the card is drawn directly from the draw pile.*
+After drawing a card with an ability, you may choose whether to use its ability. If you do not use it, proceed with your turn without activating that ability.
+Cards taken from another player's discard pile do not activate special abilities.
+## *7* — PEEK AT YOUR OWN CARD
 When you draw a *7* from the draw pile, you may:
-• Choose 1 of your 4 cards.
-• Secretly look at the front of that card.
+• Choose one of your four cards.
+• Secretly look at its value.
 • Return it face down to its original position.
-## *8* - SPY ON AN OPPONENT
+## *8* — SPY ON AN OPPONENT
 When you draw an *8* from the draw pile, you may:
-• Choose any player.
-• Choose 1 of that player's 4 cards.
-• Secretly look at the value of that card.
-Return the card to its original position afterward.
-## *9* - SWAP CARDS
-When you draw a *9* from the draw pile, you may:
-• Choose any 1 of your 4 cards.
-• Choose any 1 card belonging to another player.
-• Swap the two cards.
-## {F:KING OF FLAME} - SEE A TOTAL
-When you draw the {F:King of Flame} from the draw pile, you may:
-• Choose any player, including yourself.
-• Secretly learn the total value of that player's cards, without seeing the cards themselves.
-## {C:KING OF COIN} - SWAP FOR THEIR LOWEST CARD
-When you draw the {C:King of Coin} from the draw pile, you may:
-• Choose 1 of your 4 cards.
 • Choose another player.
-• Swap your card with that player's lowest-value card. If several of their cards tie for the lowest value, the leftmost of them is taken.
-Neither card is revealed.
-## {M:KING OF MIST} - SHUFFLE CARDS
-When you draw the {M:King of Mist} from the draw pile, you may:
-• Choose any player, including yourself.
-• Shuffle all of that player's cards and put them back face down, so nobody knows which card is where.
-## {V:KING OF VOID} - NO ABILITY
-The {V:King of Void} has no ability. It is simply worth *0* points.
+• Choose one of that player's four cards.
+• Secretly look at its value.
+• Return the card face down to its original position.
+## *9* — SWAP CARDS
+When you draw a *9* from the draw pile, you may:
+• Choose one of your four cards.
+• Choose one card belonging to another player.
+• Swap the two cards.
+## {F:King of Flame} — SEE A TOTAL
+When you draw the {F:King of Flame} from the draw pile, you may secretly learn the total value of any player's four cards, including your own.
+You learn the total score without revealing the individual cards.
+## {C:King of Coin} — SWAP FOR THEIR LOWEST CARD
+When you draw the {C:King of Coin} from the draw pile, you may:
+• Choose one of your four cards.
+• Choose another player.
+• Swap your chosen card with that player's lowest-value card.
+If several of that player's cards share the lowest value, the leftmost card is selected.
+Neither card is revealed during the swap.
+## {M:King of Mist} — SHUFFLE CARDS
+When you draw the {M:King of Mist} from the draw pile, you may choose any player, including yourself, and shuffle all four of that player's cards.
+Return the cards face down. Their positions are now unknown.
+## {V:KING OF VOID} — NO ABILITY
+The {V:KING OF VOID} is worth *0 points* and has no special ability.
 # 6. TAKING A TURN
-Players take turns in the direction agreed upon at the beginning of the game.
-On their turn, a player has 2 options:
-## Option 1 - Draw from the Draw Pile
-The player draws 1 card and may look at the card.
-The player may then:
-• Use the special ability if the drawn card is a special card; or
-• Choose not to use the ability and treat the card as a normal card.
-If the player wants to keep the drawn card, they choose 1 of their 4 cards to replace.
-The replaced card is placed face up on the discard pile.
-## Option 2 - Take the Next Player's Discarded Card
-The player may choose the face-up card on the discard pile of the player immediately before them in the playing order.
-That card is added to their hand by replacing 1 of their existing 4 cards.
-Important: A card taken from the next player does not activate any special ability, even if it is a special card.
-# 7. CARD REPLACEMENT RULE
-When replacing a card, the player must:
-1. Choose 1 of their 4 cards.
-2. Place the chosen card in the position of the newly drawn/taken card.
-3. Place the replaced card face up on the discard pile.
-The positions of the other cards may not be changed.
-This means you must always remember which card is in which position.
-# 8. RULE FOR DISCARDING CARDS OF THE SAME VALUE
+Players take turns in the agreed playing order.
+During your turn, you draw or take one card, resolve any applicable ability, choose whether to discard one card or multiple cards, and finish by placing the acquired card face down on your table.
+## Step 1 — Obtain One Card
+Choose one of the following sources:
+### Option A — Draw from the Draw Pile
+1. Draw one card from the draw pile.
+2. Look at the card you drew.
+3. If it has a special ability, decide whether to activate that ability.
+4. Resolve the ability if you choose to use it.
+5. Proceed to Step 2.
+### Option B — Take from Another Player's Discard Pile
+Take the face-up card from the discard pile of the player immediately before you in the playing order.
+This card does not activate a special ability, even if it is a special card.
+Proceed directly to Step 2.
+## Step 2 — Discard One Card or Multiple Cards
+Choose whether to discard one of your existing cards or attempt to discard multiple cards.
+### Option A — Discard One Card
+Choose one of your four cards to discard.
+Place that card face up on the appropriate discard pile.
+Proceed to Step 3.
+### Option B — Discard Multiple Cards
+You may attempt to discard multiple cards that you believe have the same value.
+After selecting the cards, check whether all the selected cards actually have the same value.
+• *If all selected cards have the same value:* Discard the matching cards and proceed to Step 3.
+• *If the selected cards do not all have the same value:* Follow the incorrect-discard procedure described below.
+### Incorrect-Discard Procedure
+If the selected cards do not all have the same value, you must keep all the cards involved in the attempted discard.
+The flowchart does not specify precisely how the newly acquired card is placed when this happens. That part of the rule must be clarified before this procedure can be implemented unambiguously.
+## Step 3 — Place the Acquired Card
+After completing the discard procedure, place the card obtained during Step 1 face down on your table.
+Keep the positions of your other cards unchanged unless a special ability explicitly changes them.
+## Step 4 — Call CABO or End Your Turn
+After completing your card actions, you may call “CABO!” if you believe your total score is the lowest.
+If you do not call CABO, your turn ends and play passes to the next player.
+# 7. RULE FOR DISCARDING CARDS OF THE SAME VALUE
 ## General Rule
-On every turn, the player normally has to replace a card. The fact that multiple cards have the same value does not automatically allow the player to discard them together.
-However, when a player draws a card from the draw pile and the drawn card has the same value as one or more cards among their existing 4 cards, the player may choose one of the following two options:
-## Option 1 - Discard the Drawn Card
-The player may discard the newly drawn card immediately and does not need to replace any of the 4 cards they already have.
-## Option 2 - Discard the Matching Cards
-The player may discard 2 or more existing cards of the same value from their cards while keeping the newly drawn card.
-The newly drawn card is then used to replace the matching cards that were discarded, according to the game rules.
-## Example
-Suppose you have 4 cards and remember that they are:
-*7* - *7* - *3* - *10*
-You draw another *7* from the draw pile.
-You may choose:
-Option A:
-Discard the newly drawn *7* -> keep your existing 4 cards unchanged.
-Option B:
-Discard the two existing *7*s -> keep the newly drawn *7*.
-If you remember incorrectly and one or more cards that you believed had the same value do not actually have the same value, the penalty for an incorrect discard applies.
+You may attempt to discard multiple cards when you believe they share the same value.
+However, the selected cards must actually have the same value for the multiple discard to succeed.
+## Successful Multiple Discard
+If all selected cards have the same value:
+• Discard the matching cards.
+• Continue the turn by placing the newly acquired card face down on your table.
+• Keep the positions of unaffected cards unchanged.
+## Incorrect Multiple Discard
+If the selected cards do not all have the same value:
+• You must keep all cards involved in the attempted discard.
+• The precise handling of the newly acquired card after an incorrect discard is not defined in the current flowchart and requires clarification.
 ## Important Note
-You may not discard an existing card simply because it has the same value as the newly drawn card. Discarding cards is only allowed according to the two options described above.
-## In Summary
-Draw a card with the same value -> you may not automatically discard all matching cards.
-You may only choose:
-1. Discard the newly drawn card and keep your existing cards unchanged; or
-2. Discard the matching cards you already have and keep the newly drawn card.
-This rule requires players to remember their cards accurately and adds an element of risk and strategy to CABO.
-# 9. CALLING “CABO!”
-When a player believes they have the lowest total score, they may call:
-“CABO!”
+Do not assume that cards can be discarded together simply because you believe they have the same value. The actual values must match.
+# 8. CALLING “CABO!”
+When you believe your total score is the lowest, you may call:
+*“CABO!”*
 Once a player calls CABO:
 • The player who called CABO does not take another turn.
-• All other players are allowed to take exactly one final turn.
+• Every other player receives exactly one final turn.
 • After all final turns are completed, the round ends.
-All players then reveal all 4 cards and calculate their scores.
-# 10. WHEN THE CABO CALLER WINS
-If, after all cards are revealed, the CABO caller has the lowest total score, they win the round.
-As a reward, the winner's points are reduced by the CABO Reward/Penalty value that the players set before the game begins (5, 10, 15 or 20 points).
-# 11. WHEN THE CABO CALLER LOSES
+• All players reveal their four cards and calculate their total scores.
+# 9. WHEN THE CABO CALLER WINS
+If the CABO caller has the lowest total score after all final turns, the call is successful.
+The caller receives the CABO reward configured before the game begins.
+The available reward/penalty values are 5, 10, 15, or 20 points.
+# 10. WHEN THE CABO CALLER LOSES
 If the CABO caller does not have the lowest total score, the call is incorrect.
-As a penalty, the caller's points are increased by that same CABO Reward/Penalty value.
-# 12. WHEN THE DRAW PILE RUNS OUT
-If the entire draw pile runs out and no player has called CABO, the round ends immediately.
+The caller receives the CABO penalty configured before the game begins.
+The available reward/penalty values are 5, 10, 15, or 20 points.
+# 11. WHEN THE DRAW PILE RUNS OUT
+If the draw pile runs out and no player has called CABO, the round ends immediately.
 All players:
-1. Reveal their 4 cards.
-2. Calculate their total score.
-3. Compare their scores with those of all other players.
+1. Reveal their four cards.
+2. Calculate their total scores.
+3. Compare their scores.
 The player with the lowest total score wins the round.
-However:
-The winner in this situation does not receive the CABO reward.
-This is a win based on the final score, rather than by successfully calling CABO.
+The winner does not receive the CABO reward because no successful CABO call was made.
 # 13. QUICK REFERENCE
-## Card - Ability when drawn from the draw pile
-• {V:King of Void} - *0* points, no ability
-• {F:King of Flame} - *13* points; secretly see the total of any player's cards
-• {C:King of Coin} - *13* points; swap 1 of your cards with another player's lowest card
-• {M:King of Mist} - *13* points; shuffle all of any player's cards
-• *7* - Secretly look at 1 of your own cards
-• *8* - Secretly look at 1 card belonging to any player
-• *9* - Swap 1 of your cards with 1 card belonging to another player
-• All other cards - No special ability
-## REMEMBER THESE 5 KEY RULES
-1. 4 cards - keep their positions unchanged.
-2. On the first turn, secretly look at 2 cards.
-3. Only a special card drawn directly from the draw pile has a special ability.
-4. You may take the risk of discarding matching cards, but if you remember incorrectly, you must keep all the cards involved.
-5. Call “CABO” at the right time to win the reward - call it incorrectly and receive the penalty.
+## Card — Ability When Drawn from the Draw Pile
+• {V:KING OF VOID} — *0 points*, no ability.
+• {F:King of Flame} — *13 points*; secretly learn any player's total.
+• {C:King of Coin} — *13 points*; swap one of your cards with another player's lowest-value card.
+• {M:King of Mist} — *13 points*; shuffle all four cards belonging to any player.
+• *7* — Secretly look at one of your own cards.
+• *8* — Secretly look at one card belonging to another player.
+• *9* — Swap one of your cards with one card belonging to another player.
+• All other cards — No special ability.
+## Remember These Key Rules
+1. Each player has four cards whose positions remain fixed unless an ability changes them.
+2. At the beginning of the round, each player secretly looks at two cards.
+3. Only a special card drawn directly from the draw pile can activate its ability.
+4. Taking a card from another player's discard pile does not activate its ability.
+5. Multiple cards can only be discarded successfully if all selected cards have the same value.
+6. Call CABO at the right time to attempt to earn the reward.
 ## THE ULTIMATE GOAL
 Remember your cards.
 Read your opponents.
 Replace your high-value cards.
-And most importantly - CALL “CABO” AT THE RIGHT TIME!`,vi:`# 1. MỤC TIÊU TRÒ CHƠI
-Mục tiêu của CABO là trở thành người chơi có tổng giá trị 4 lá bài thấp nhất.
-Điểm đặc biệt của CABO là ngay từ đầu, bạn không biết toàn bộ các lá bài của mình. Bạn phải ghi nhớ vị trí các lá bài, sử dụng các lá bài chức năng để tìm hiểu thông tin, theo dõi bài của đối thủ và tìm cơ hội thay thế những lá bài có giá trị cao.
-Khi tin rằng tổng điểm của mình là thấp nhất, bạn có thể hô “CABO!” để kết thúc vòng. Tuy nhiên, tất cả những người chơi khác vẫn được thực hiện 1 lượt cuối cùng.
-Nếu dự đoán chính xác, bạn sẽ giành chiến thắng và được giảm điểm làm phần thưởng. Nếu đoán sai, bạn sẽ bị cộng thêm điểm làm hình phạt.
+And most importantly — *CALL “CABO” AT THE RIGHT TIME!*`,vi:`# 1. MỤC TIÊU TRÒ CHƠI
+Mục tiêu của CABO là kết thúc vòng chơi với tổng giá trị bốn lá bài của bạn thấp nhất.
+Ngay từ đầu, bạn chỉ biết giá trị của một vài lá bài của mình. Bạn phải ghi nhớ vị trí của chúng, dùng khả năng của các lá bài đặc biệt để thu thập thông tin, quan sát đối thủ và thay thế các lá bài giá trị cao bất cứ khi nào có thể.
+Khi tin rằng tổng điểm của mình là thấp nhất, bạn có thể hô “CABO!” để kết thúc phần tham gia của mình trong vòng chơi. Tất cả người chơi còn lại sẽ có thêm đúng một lượt cuối cùng.
+Nếu dự đoán của bạn đúng, bạn nhận phần thưởng. Nếu dự đoán sai, bạn nhận hình phạt.
 # 2. SỐ LƯỢNG NGƯỜI CHƠI
-2-6 người chơi.
+CABO dành cho 2–6 người chơi.
 # 3. CHUẨN BỊ TRÒ CHƠI
-Mỗi người chơi nhận 4 lá bài và đặt úp trước mặt.
-Bốn lá bài phải được đặt tại 4 vị trí cố định trong suốt vòng chơi.
-Người chơi không được tự ý thay đổi vị trí hoặc xáo trộn 4 lá bài của mình.
+1. Xáo bộ bài và đặt úp xuống để tạo thành chồng bài rút.
+2. Mỗi người chơi nhận bốn lá bài.
+3. Đặt bốn lá bài úp trước mặt.
+4. Giữ bốn lá bài ở các vị trí cố định trong suốt vòng chơi. Bạn không được sắp xếp lại chúng, trừ khi một khả năng đặc biệt cho phép.
+5. Đặt các chồng bài thải ngửa lên để người chơi có thể lấy bài từ đó theo luật của lượt chơi.
 ## Lượt đầu tiên
-Mỗi người chơi được phép:
-1. Bí mật mở 2 trong 4 lá bài của mình.
-2. Ghi nhớ giá trị và vị trí của 2 lá bài.
-3. Úp lại các lá bài đúng vị trí ban đầu.
-4. Không được để những người chơi khác nhìn thấy.
-Hãy ghi nhớ thật kỹ! Bạn sẽ không được xem lại 2 lá bài này nếu không sử dụng quyền năng phù hợp.
+Khi bắt đầu vòng chơi, mỗi người chơi có thể:
+1. Bí mật xem hai trong bốn lá bài của mình.
+2. Ghi nhớ giá trị và vị trí của các lá bài đó.
+3. Úp các lá bài lại đúng vị trí ban đầu.
+Bạn không được xem lại các lá bài này trừ khi một khả năng của lá bài cho phép.
 # 4. GIÁ TRỊ CÁC LÁ BÀI
-Các lá bài được tính điểm theo số ghi trên lá bài.
-## {V:KING OF VOID} - *0* ĐIỂM
-{V:King of Void} có giá trị *0* điểm.
-Đây là lá bài có giá trị đặc biệt thấp và rất có lợi khi giữ lại.
-Ba lá *King* còn lại ({F:Flame}, {C:Coin} và {M:Mist}) có giá trị *13* điểm mỗi lá.
+Mỗi lá bài đóng góp giá trị của nó vào tổng điểm của bạn. Giá trị các lá bài được xác định theo số ghi trên lá:
+• *A* = *1 điểm*
+• *2* = *2 điểm*
+• *3* = *3 điểm*
+• *4* = *4 điểm*
+• *5* = *5 điểm*
+• *6* = *6 điểm*
+• *7* = *7 điểm*
+• *8* = *8 điểm*
+• *9* = *9 điểm*
+• *10* = *10 điểm*
+• *J* = *11 điểm*
+• *Q* = *12 điểm*
+• *K* = *13 điểm*, trừ {V:KING OF VOID} có giá trị *0 điểm*.
 # 5. CÁC LÁ BÀI CHỨC NĂNG
-Các lá bài chức năng gồm lá *7*, lá *8*, lá *9*, {F:King of Flame}, {C:King of Coin} và {M:King of Mist}.
-Lá bài chức năng chỉ có tác dụng khi được rút trực tiếp từ bộ bài dư.
-Bạn có thể sử dụng hoặc không sử dụng quyền năng. Nếu không sử dụng, lá bài được xem như một lá bài thông thường.
-## *7* - XEM BÀI CỦA MÌNH
-Khi rút được lá *7* từ bộ bài dư, bạn có quyền:
-• Chọn 1 trong 4 lá bài của mình.
-• Bí mật xem mặt trước của lá bài đó.
-• Sau khi xem, úp lại đúng vị trí.
-## *8* - DO THÁM ĐỐI THỦ
-Khi rút được lá *8* từ bộ bài dư, bạn có quyền:
-• Chọn một người chơi bất kỳ.
-• Chọn 1 trong 4 lá bài của người đó.
-• Bí mật xem giá trị của lá bài.
-Sau đó, lá bài được đặt lại đúng vị trí.
-## *9* - ĐỔI BÀI
-Khi rút được lá *9* từ bộ bài dư, bạn có quyền:
-• Chọn 1 lá bài bất kỳ trong 4 lá bài của mình.
-• Chọn 1 lá bài bất kỳ của một người chơi khác.
-• Đổi hai lá bài cho nhau.
-## {F:KING OF FLAME} - XEM TỔNG ĐIỂM
-Khi rút được {F:King of Flame} từ bộ bài dư, bạn có quyền:
-• Chọn một người chơi bất kỳ, kể cả chính bạn.
-• Bí mật biết tổng giá trị các lá bài của người đó, mà không được xem từng lá bài.
-## {C:KING OF COIN} - ĐỔI LẤY LÁ BÀI THẤP NHẤT CỦA ĐỐI THỦ
-Khi rút được {C:King of Coin} từ bộ bài dư, bạn có quyền:
-• Chọn 1 trong 4 lá bài của mình.
+Các lá bài chức năng gồm *7*, *8*, *9*, {F:King of Flame}, {C:King of Coin} và {M:King of Mist}.
+*Khả năng đặc biệt chỉ được kích hoạt khi lá bài được rút trực tiếp từ chồng bài rút.*
+Sau khi rút một lá bài có khả năng đặc biệt, bạn được chọn dùng hoặc không dùng khả năng đó. Nếu không dùng, bạn tiếp tục lượt chơi mà không kích hoạt khả năng ấy.
+Các lá bài lấy từ chồng bài thải của người chơi khác không kích hoạt khả năng đặc biệt.
+## *7* — XEM BÀI CỦA MÌNH
+Khi rút được lá *7* từ chồng bài rút, bạn có thể:
+• Chọn một trong bốn lá bài của mình.
+• Bí mật xem giá trị của lá bài đó.
+• Úp lá bài lại đúng vị trí ban đầu.
+## *8* — DO THÁM ĐỐI THỦ
+Khi rút được lá *8* từ chồng bài rút, bạn có thể:
 • Chọn một người chơi khác.
-• Đổi lá bài của mình với lá bài có giá trị thấp nhất của người đó. Nếu có nhiều lá cùng thấp nhất, lấy lá ngoài cùng bên trái trong số đó.
-Cả hai lá bài đều không được lật lên.
-## {M:KING OF MIST} - XÁO TRỘN BÀI
-Khi rút được {M:King of Mist} từ bộ bài dư, bạn có quyền:
-• Chọn một người chơi bất kỳ, kể cả chính bạn.
-• Xáo trộn tất cả các lá bài của người đó rồi úp lại, để không ai biết lá nào nằm ở vị trí nào.
-## {V:KING OF VOID} - KHÔNG CÓ CHỨC NĂNG
-{V:King of Void} không có chức năng. Nó chỉ có giá trị *0* điểm.
+• Chọn một trong bốn lá bài của người chơi đó.
+• Bí mật xem giá trị của lá bài.
+• Úp lá bài lại đúng vị trí ban đầu.
+## *9* — ĐỔI BÀI
+Khi rút được lá *9* từ chồng bài rút, bạn có thể:
+• Chọn một trong bốn lá bài của mình.
+• Chọn một lá bài của người chơi khác.
+• Đổi hai lá bài cho nhau.
+## {F:King of Flame} — XEM TỔNG ĐIỂM
+Khi rút được {F:King of Flame} từ chồng bài rút, bạn có thể bí mật biết tổng giá trị bốn lá bài của bất kỳ người chơi nào, kể cả của chính mình.
+Bạn chỉ biết tổng điểm, không thấy từng lá bài riêng lẻ.
+## {C:King of Coin} — ĐỔI LẤY LÁ THẤP NHẤT
+Khi rút được {C:King of Coin} từ chồng bài rút, bạn có thể:
+• Chọn một trong bốn lá bài của mình.
+• Chọn một người chơi khác.
+• Đổi lá bài bạn đã chọn lấy lá bài có giá trị thấp nhất của người chơi đó.
+Nếu người chơi đó có nhiều lá bài cùng giá trị thấp nhất, lá bài ngoài cùng bên trái sẽ được chọn.
+Không lá bài nào bị lật lên khi đổi.
+## {M:King of Mist} — XÁO BÀI
+Khi rút được {M:King of Mist} từ chồng bài rút, bạn có thể chọn bất kỳ người chơi nào, kể cả chính mình, và xáo trộn cả bốn lá bài của người chơi đó.
+Úp các lá bài lại. Từ lúc này, vị trí của các lá bài không còn ai biết.
+## {V:KING OF VOID} — KHÔNG CÓ KHẢ NĂNG
+{V:KING OF VOID} có giá trị *0 điểm* và không có khả năng đặc biệt.
 # 6. CÁCH THỰC HIỆN MỘT LƯỢT
-Người chơi lần lượt thực hiện lượt chơi theo chiều đã thống nhất từ đầu.
-Đến lượt mình, người chơi có 2 lựa chọn:
-## Lựa chọn 1 - Rút bài từ bộ bài dư
-Người chơi rút 1 lá bài và được phép xem lá bài đó.
-Sau đó, người chơi có thể:
-• Sử dụng chức năng đặc biệt nếu lá bài vừa rút là lá bài chức năng; hoặc
-• Không sử dụng chức năng và tiếp tục xử lý như một lá bài thông thường.
-Nếu muốn giữ lá bài vừa rút, người chơi chọn 1 trong 4 lá bài của mình để thay thế.
-Lá bài bị thay thế được đưa vào chồng bài thải.
-## Lựa chọn 2 - Lấy lá bài thải của người chơi kế tiếp
-Người chơi có thể chọn lá bài đang ngửa trên chồng bài thải của người chơi ngồi kế tiếp phía trước mình.
-Lá bài này được đưa vào bộ bài của mình để thay thế cho 1 trong 4 lá bài đang có.
-Lưu ý: Lá bài lấy từ người chơi kế tiếp không kích hoạt chức năng đặc biệt, kể cả đó là lá bài chức năng.
-# 7. QUY TẮC ĐỔI BÀI
-Khi thay một lá bài, người chơi phải:
-1. Chọn 1 trong 4 lá bài của mình.
-2. Đưa lá bài được chọn vào vị trí của lá bài vừa rút/lấy.
-3. Đưa lá bài bị thay thế vào chồng bài thải.
-Không được thay đổi vị trí của các lá bài còn lại.
-Điều này có nghĩa là bạn phải luôn ghi nhớ lá bài nào đang nằm ở vị trí nào.
-# 8. QUY TẮC VỨT CÁC LÁ BÀI CÙNG SỐ
+Người chơi lần lượt thực hiện lượt chơi theo thứ tự đã thống nhất.
+Trong lượt của mình, bạn rút hoặc lấy một lá bài, thực hiện khả năng đặc biệt nếu có, chọn bỏ một lá bài hoặc nhiều lá bài, và kết thúc bằng việc đặt lá bài vừa có được úp xuống bàn của mình.
+## Bước 1 — Lấy một lá bài
+Chọn một trong các nguồn sau:
+### Lựa chọn A — Rút từ chồng bài rút
+1. Rút một lá bài từ chồng bài rút.
+2. Xem lá bài bạn vừa rút.
+3. Nếu lá bài có khả năng đặc biệt, hãy quyết định có kích hoạt khả năng đó hay không.
+4. Thực hiện khả năng đó nếu bạn chọn dùng.
+5. Chuyển sang Bước 2.
+### Lựa chọn B — Lấy từ chồng bài thải của người chơi khác
+Lấy lá bài đang ngửa trên chồng bài thải của người chơi ngồi ngay trước bạn theo thứ tự chơi.
+Lá bài này không kích hoạt khả năng đặc biệt, kể cả khi đó là lá bài đặc biệt.
+Chuyển thẳng sang Bước 2.
+## Bước 2 — Bỏ một lá bài hoặc nhiều lá bài
+Chọn bỏ một trong các lá bài đang có hoặc thử bỏ nhiều lá bài cùng lúc.
+### Lựa chọn A — Bỏ một lá bài
+Chọn một trong bốn lá bài của bạn để bỏ.
+Đặt lá bài đó ngửa lên chồng bài thải tương ứng.
+Chuyển sang Bước 3.
+### Lựa chọn B — Bỏ nhiều lá bài
+Bạn có thể thử bỏ nhiều lá bài mà bạn cho rằng có cùng giá trị.
+Sau khi chọn các lá bài, hãy kiểm tra xem tất cả các lá đã chọn có thật sự cùng giá trị hay không.
+• *Nếu tất cả các lá đã chọn có cùng giá trị:* Bỏ các lá bài giống nhau đó và chuyển sang Bước 3.
+• *Nếu các lá đã chọn không cùng giá trị:* Thực hiện quy trình bỏ bài sai được nêu dưới đây.
+### Quy trình bỏ bài sai
+Nếu các lá đã chọn không cùng giá trị, bạn phải giữ lại tất cả các lá bài liên quan trong lần thử bỏ bài đó.
+Lưu đồ chưa nêu rõ lá bài vừa có được sẽ được đặt như thế nào trong trường hợp này. Phần luật này cần được làm rõ trước khi có thể áp dụng quy trình một cách không mơ hồ.
+## Bước 3 — Đặt lá bài vừa có được
+Sau khi hoàn thành việc bỏ bài, hãy đặt lá bài đã lấy ở Bước 1 úp xuống bàn của bạn.
+Giữ nguyên vị trí các lá bài khác, trừ khi một khả năng đặc biệt thay đổi chúng một cách rõ ràng.
+## Bước 4 — Hô CABO hoặc kết thúc lượt
+Sau khi hoàn thành các thao tác với bài, bạn có thể hô “CABO!” nếu tin rằng tổng điểm của mình là thấp nhất.
+Nếu không hô CABO, lượt của bạn kết thúc và lượt chơi chuyển sang người kế tiếp.
+# 7. QUY TẮC BỎ CÁC LÁ BÀI CÙNG GIÁ TRỊ
 ## Nguyên tắc chung
-Mỗi lượt chơi, người chơi luôn phải thực hiện việc đổi bài. Việc các lá bài có cùng số không đồng nghĩa với việc được phép vứt chúng cùng nhau.
-Tuy nhiên, khi rút được một lá bài từ bộ bài dư và lá bài vừa rút cùng số với một hoặc nhiều lá bài đang có trong 4 lá bài của mình, người chơi được quyền lựa chọn một trong hai cách sau:
-## Cách 1 - Vứt lá bài vừa rút
-Người chơi có thể vứt bỏ ngay lá bài vừa rút và không cần đổi bất kỳ lá bài nào trong 4 lá bài của mình.
-## Cách 2 - Vứt các lá bài cùng số đang có
-Người chơi có thể vứt bỏ 2 hoặc nhiều lá bài cùng số đang có trong bộ bài của mình, đồng thời giữ lại lá bài vừa rút.
-Lá bài vừa rút sẽ được dùng để thay thế cho các lá bài cùng số đã bị vứt bỏ, theo đúng quy tắc của trò chơi.
-## Ví dụ
-Bạn đang có 4 lá bài và nhớ rằng trong đó có:
-*7* - *7* - *3* - *10*
-Bạn rút được thêm 1 lá *7* từ bộ bài dư.
-Bạn có thể lựa chọn:
-Phương án A:
-Vứt lá *7* vừa rút -> giữ nguyên 4 lá bài đang có.
-Phương án B:
-Vứt hai lá *7* đang có -> giữ lại lá *7* vừa rút.
-Nếu bạn nhớ sai và một hoặc nhiều lá bài bạn cho rằng là cùng số nhưng thực tế không cùng số, bạn phải áp dụng quy tắc phạt do vứt bài không chính xác của trò chơi.
+Bạn có thể thử bỏ nhiều lá bài cùng lúc khi cho rằng chúng có cùng giá trị.
+Tuy nhiên, các lá bài đã chọn phải thật sự cùng giá trị thì việc bỏ nhiều lá mới thành công.
+## Bỏ nhiều lá bài thành công
+Nếu tất cả các lá đã chọn có cùng giá trị:
+• Bỏ các lá bài giống nhau đó.
+• Tiếp tục lượt chơi bằng cách đặt lá bài vừa có được úp xuống bàn của bạn.
+• Giữ nguyên vị trí của các lá bài không bị ảnh hưởng.
+## Bỏ nhiều lá bài sai
+Nếu các lá đã chọn không cùng giá trị:
+• Bạn phải giữ lại tất cả các lá bài liên quan trong lần thử bỏ bài đó.
+• Cách xử lý chính xác lá bài vừa có được sau khi bỏ sai chưa được quy định trong lưu đồ hiện tại và cần được làm rõ.
 ## Lưu ý quan trọng
-Không được vứt một lá bài đang có chỉ vì nó có cùng số với lá bài vừa rút. Việc vứt bài chỉ được thực hiện theo hai lựa chọn nêu trên.
-## Tóm lại
-Rút được lá cùng số -> không được tự động vứt tất cả các lá cùng số.
-Bạn chỉ được chọn:
-1. Vứt lá vừa rút và giữ nguyên bài của mình; hoặc
-2. Vứt các lá cùng số đang có và giữ lại lá vừa rút.
-Quy tắc này giúp người chơi phải ghi nhớ chính xác bài của mình và tạo thêm yếu tố may rủi, chiến thuật cho CABO.
-# 9. GỌI “CABO!”
-Khi cảm thấy mình đang có tổng điểm thấp nhất, người chơi có thể hô:
-“CABO!”
-Ngay khi một người gọi CABO:
-• Người gọi CABO không được chơi thêm lượt.
-• Tất cả những người chơi còn lại được thực hiện đúng 1 lượt cuối cùng.
-• Sau khi lượt cuối của tất cả người chơi hoàn thành, vòng chơi kết thúc.
-Tất cả người chơi sau đó lật toàn bộ 4 lá bài để tính điểm.
-# 10. NGƯỜI GỌI CABO THẮNG
-Nếu sau khi lật bài, người gọi CABO có tổng điểm thấp nhất, người đó thắng vòng.
-Làm phần thưởng, điểm của người thắng được giảm đi bằng giá trị Thưởng/Phạt CABO mà những người chơi đã thiết lập trước khi bắt đầu (5, 10, 15 hoặc 20 điểm).
-# 11. NGƯỜI GỌI CABO THUA
-Nếu người gọi CABO không có tổng điểm thấp nhất, lần gọi CABO bị xem là sai.
-Làm hình phạt, điểm của người gọi CABO được tăng thêm đúng bằng giá trị Thưởng/Phạt CABO nói trên.
-# 12. TRƯỜNG HỢP HẾT BỘ BÀI
-Nếu toàn bộ bộ bài dư đã được rút hết mà không có người chơi nào gọi CABO, vòng chơi kết thúc ngay lập tức.
+Đừng cho rằng có thể bỏ các lá bài cùng lúc chỉ vì bạn tin chúng có cùng giá trị. Giá trị thật của các lá bài phải trùng nhau.
+# 8. HÔ “CABO!”
+Khi tin rằng tổng điểm của mình là thấp nhất, bạn có thể hô:
+*“CABO!”*
+Khi một người chơi hô CABO:
+• Người hô CABO không được chơi thêm lượt nào nữa.
+• Mỗi người chơi còn lại được thực hiện đúng một lượt cuối cùng.
+• Sau khi tất cả các lượt cuối hoàn thành, vòng chơi kết thúc.
+• Tất cả người chơi lật bốn lá bài của mình và tính tổng điểm.
+# 9. KHI NGƯỜI HÔ CABO THẮNG
+Nếu người hô CABO có tổng điểm thấp nhất sau tất cả các lượt cuối, lời hô được xem là thành công.
+Người hô nhận phần thưởng CABO đã được thiết lập trước khi bắt đầu trò chơi.
+Các mức thưởng/phạt có thể chọn là 5, 10, 15 hoặc 20 điểm.
+# 10. KHI NGƯỜI HÔ CABO THUA
+Nếu người hô CABO không có tổng điểm thấp nhất, lời hô bị xem là sai.
+Người hô nhận hình phạt CABO đã được thiết lập trước khi bắt đầu trò chơi.
+Các mức thưởng/phạt có thể chọn là 5, 10, 15 hoặc 20 điểm.
+# 11. KHI CHỒNG BÀI RÚT HẾT
+Nếu chồng bài rút đã hết mà chưa ai hô CABO, vòng chơi kết thúc ngay lập tức.
 Tất cả người chơi:
-1. Lật 4 lá bài của mình.
+1. Lật bốn lá bài của mình.
 2. Tính tổng điểm.
-3. So sánh điểm của tất cả người chơi.
-Người có tổng điểm thấp nhất là người chiến thắng vòng đó.
-Tuy nhiên:
-Người chiến thắng trong trường hợp hết bộ bài sẽ không nhận được phần thưởng CABO.
-Đây là trường hợp thắng do kết quả điểm số, chứ không phải do chủ động gọi CABO.
+3. So sánh điểm của mọi người.
+Người có tổng điểm thấp nhất thắng vòng chơi.
+Người thắng không nhận phần thưởng CABO vì không có lời hô CABO thành công nào.
 # 13. TÓM TẮT NHANH
-## Lá bài - Chức năng khi rút từ bộ bài dư
-• {V:King of Void} - *0* điểm, không có chức năng
-• {F:King of Flame} - *13* điểm; bí mật xem tổng điểm bài của một người chơi bất kỳ
-• {C:King of Coin} - *13* điểm; đổi 1 lá của mình với lá thấp nhất của người chơi khác
-• {M:King of Mist} - *13* điểm; xáo trộn tất cả bài của một người chơi bất kỳ
-• *7* - Xem bí mật 1 lá bài của mình
-• *8* - Xem bí mật 1 lá bài của một người chơi bất kỳ
-• *9* - Đổi 1 lá bài của mình với 1 lá bài của người chơi khác
-• Tất cả các lá khác - Không có chức năng đặc biệt
-## HÃY NHỚ 5 NGUYÊN TẮC QUAN TRỌNG
-1. 4 lá bài - giữ nguyên vị trí.
-2. Lượt đầu được xem bí mật 2 lá.
-3. Chỉ lá bài chức năng rút trực tiếp từ bộ bài dư mới có chức năng.
-4. Có thể mạo hiểm bỏ các lá bài cùng số, nhưng nhớ sai sẽ phải giữ lại tất cả.
-5. Hô “CABO” đúng lúc để giành phần thưởng - hô sai sẽ chịu hình phạt.
+## Lá bài — Khả năng khi rút từ chồng bài rút
+• {V:KING OF VOID} — *0 điểm*, không có khả năng đặc biệt.
+• {F:King of Flame} — *13 điểm*; bí mật biết tổng điểm của bất kỳ người chơi nào.
+• {C:King of Coin} — *13 điểm*; đổi một lá bài của bạn lấy lá bài giá trị thấp nhất của người chơi khác.
+• {M:King of Mist} — *13 điểm*; xáo trộn cả bốn lá bài của bất kỳ người chơi nào.
+• *7* — Bí mật xem một lá bài của mình.
+• *8* — Bí mật xem một lá bài của người chơi khác.
+• *9* — Đổi một lá bài của bạn lấy một lá bài của người chơi khác.
+• Các lá bài khác — Không có khả năng đặc biệt.
+## Hãy nhớ các nguyên tắc quan trọng
+1. Mỗi người chơi có bốn lá bài với vị trí cố định, trừ khi một khả năng thay đổi chúng.
+2. Đầu vòng chơi, mỗi người chơi bí mật xem hai lá bài.
+3. Chỉ lá bài đặc biệt được rút trực tiếp từ chồng bài rút mới kích hoạt được khả năng.
+4. Lấy bài từ chồng bài thải của người chơi khác không kích hoạt khả năng của lá bài đó.
+5. Chỉ bỏ được nhiều lá bài thành công khi tất cả các lá đã chọn có cùng giá trị.
+6. Hô CABO đúng lúc để cố giành phần thưởng.
 ## MỤC TIÊU CUỐI CÙNG
 Nhớ bài của mình.
 Đọc bài của đối thủ.
-Đổi những lá bài có giá trị cao.
-Và quan trọng nhất - HÔ “CABO” ĐÚNG LÚC!`};
+Thay thế những lá bài giá trị cao.
+Và quan trọng nhất — *HÔ “CABO” ĐÚNG LÚC!*`};
 let RL='en';
 function rulesRender(){const T=RULES[RL];$('#rt').textContent=RL=='en'?'CABO GAME RULE':'LUẬT CHƠI CABO';$('#rlang').innerHTML=RL=='en'?'<span class="vf">Tiếng Việt</span>':'English';$('#rl').classList.toggle('vi',RL=='vi');
-$('#rb').innerHTML=T.split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{const t=esc(l.replace(/^(#{1,2}\s+|•\s+)/,'')).replace(/\{([FVMC]):([^}]+)\}/g,'<b class="k$1">$2</b>').replace(/\*([^*]+)\*/g,'<b>$1</b>');return l.startsWith('## ')?'<h4>'+t+'</h4>':l.startsWith('# ')?'<h3>'+t+'</h3>':l.startsWith('• ')?'<p class="b">'+t+'</p>':/^\d+\.\s/.test(l)?'<p class="n">'+t+'</p>':'<p>'+t+'</p>'}).join('')}
+$('#rb').innerHTML=T.split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{const t=esc(l.replace(/^(#{1,3}\s+|•\s+)/,'')).replace(/\{([FVMC]):([^}]+)\}/g,'<b class="k$1">$2</b>').replace(/\*([^*]+)\*/g,'<b>$1</b>');return l.startsWith('### ')?'<h5>'+t+'</h5>':l.startsWith('## ')?'<h4>'+t+'</h4>':l.startsWith('# ')?'<h3>'+t+'</h3>':l.startsWith('• ')?'<p class="b">'+t+'</p>':/^\d+\.\s/.test(l)?'<p class="n">'+t+'</p>':'<p>'+t+'</p>'}).join('')}
 function rulesOpen(on){const r=$('#rl');if(on){rulesRender();r.scrollTop=0;r.setAttribute('aria-hidden','false');void r.offsetWidth;r.classList.add('on')}else{r.classList.remove('on');r.setAttribute('aria-hidden','true')}}
 function fitMenu(){const m=$('#mn'),a=$('#app');if(!m||!a)return;m.style.transform='none';const k=Math.min(1,(a.clientHeight-6)/m.offsetHeight,(a.clientWidth-6)/m.offsetWidth);m.style.transform=k<1?'scale('+k+')':'none'}
 $('[data-a=rback]').innerHTML=IC.back+' Back';$('#hback').innerHTML=IC.undo+'<span>BACK</span>';
