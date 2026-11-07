@@ -125,6 +125,12 @@ body.caboed #alarm{opacity:1;animation:alm 1.1s ease-in-out infinite alternate}@
 .c.cl.sel:hover{transform:translateY(-14px) scale(1.08)}
 #hspd{position:absolute;left:176px;top:10px;width:58px;height:58px;margin:0;padding:0;display:none;align-items:center;justify-content:center;font-family:var(--sk);font-size:16px;letter-spacing:0;z-index:2}#hspd.on{display:flex}#hspd.fast{background:#f2b632;color:#16110a;border-bottom-color:#8a6208}#hspd.slow{background:#3b5bb5}#hspd:disabled{opacity:.8;cursor:default}@media(max-width:600px){#hspd{left:134px;width:50px;height:50px;font-size:14px}}
 .hp{display:inline-flex;gap:2px;margin-left:8px;vertical-align:middle}.hp svg,td svg{width:15px;height:14px}.pn.dead{filter:grayscale(1);opacity:.55}.fx.lifeup{display:grid;place-items:center}.fx.lifeup span{display:flex;align-items:center;gap:6px;font-size:42px;color:#ff6b6b;text-shadow:0 0 14px #e0413f,3px 3px 0 #000a;animation:lup 2s ease-out forwards}@keyframes lup{0%{transform:translateY(20px) scale(.3);opacity:0}15%{transform:scale(1.2);opacity:1}80%{opacity:1}100%{transform:translateY(-50px);opacity:0}}
+.hand .c.hln{animation:sway 2.2s ease-in-out infinite alternate,hln 1.8s ease-out var(--he,0s) 1 both;z-index:7}
+@keyframes hln{0%{scale:1.28;box-shadow:0 0 0 5px #7fe8ff,0 0 34px 12px #7fe8ffcc}20%{scale:1;box-shadow:0 0 0 4px #7fe8ff,0 0 26px 8px #7fe8ffaa}70%{box-shadow:0 0 0 3px #7fe8ff,0 0 20px 5px #7fe8ff77}100%{scale:1;box-shadow:0 0 0 0 #7fe8ff00,0 0 0 0 #7fe8ff00}}
+.hand .c.hln:after{content:"NEW";position:absolute;top:-15px;left:50%;translate:-50% 0;background:#7fe8ff;color:#00222b;font:700 11px/1 var(--sk,Silkscreen),monospace;padding:3px 6px;border-radius:4px;box-shadow:0 2px 0 #0008;pointer-events:none;animation:hlb 1.8s var(--he,0s) both}
+@keyframes hlb{0%{opacity:0;translate:-50% 8px}12%{opacity:1;translate:-50% 0}78%{opacity:1}100%{opacity:0}}
+.hand .c.em.hlx{animation:hlx 1.8s ease-out var(--he,0s) 1 both}
+@keyframes hlx{0%{box-shadow:0 0 0 4px #ff6b6b,0 0 26px 8px #ff6b6bcc;background:#ff6b6b33}70%{box-shadow:0 0 0 3px #ff6b6b88,0 0 14px 4px #ff6b6b55;background:#ff6b6b18}100%{box-shadow:0 0 0 0 #0000;background:#0000}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important}}
 .nm{display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px}
 .pt{display:inline-flex;align-items:baseline;gap:4px;background:#0a1428;border:2px solid var(--gd);color:var(--gd);border-radius:4px;padding:0 6px;font-size:15px;line-height:1.3;white-space:nowrap}
@@ -352,18 +358,19 @@ const key=c=>c.r=='K'?'K'+c.s:c.r,lab=c=>c.r+' of '+SN[c.s],lg=t=>G.log.push(t);
 const idxs=p=>G.P[p].s.map((c,i)=>c?i:-1).filter(i=>i>=0);
 const low=p=>idxs(p).reduce((b,i)=>b<0||G.P[p].s[i].v<G.P[p].s[b].v?i:b,-1);
 const tot=p=>G.P[p].s.reduce((a,c)=>a+(c?c.v:0),0);
-function swap(a,i,b,j){const x=G.P[a].s[i],y=G.P[b].s[j];G.P[a].s[i]=y;G.P[b].s[j]=x;x.k=y.k=false}
-function shuf(p){sh(G.P[p].s);G.P[p].s.forEach(c=>c&&(c.k=false))}
-function put(p,i,c){const o=G.P[p].s[i];G.P[p].s[i]=c;c.k=true;G.P[p].d.push(o);lg(G.P[p].n+' keeps the new card, discards '+lab(o))}
+function swap(a,i,b,j){const x=G.P[a].s[i],y=G.P[b].s[j];G.P[a].s[i]=y;G.P[b].s[j]=x;x.k=y.k=false;hlAdd([[a,i,'n'],[b,j,'n']])}
+function shuf(p){sh(G.P[p].s);G.P[p].s.forEach(c=>c&&(c.k=false));hlAdd(G.P[p].s.map((c,i)=>c?[p,i,'n']:null).filter(Boolean))}
+function put(p,i,c){const o=G.P[p].s[i];G.P[p].s[i]=c;c.k=true;G.P[p].d.push(o);hlAdd([[p,i,'n']]);lg(G.P[p].n+' keeps the new card, discards '+lab(o))}
 function startHost(){if(G)return;TS=snap(($('#tn')||{}).value);LV=snapLV(($('#lvn')||{}).value);RP=snapRP(($('#rn')||{}).value);RN=snapRN(($('#gn')||{}).value);NS=+$('#ns').value;const n=Math.max(L.p.length,NS);G={P:[],tot:[],round:1,ts:TS,lv:LV,rp:RP,rn:RN,gm:GM};
 L.p.forEach(p=>G.P.push({n:p.n,bot:0,pid:p.pid}));{const used=new Set(G.P.map(p=>p.n.trim().toLowerCase()));let bi=0;while(G.P.length<n){let nm;do{nm=BN[bi++]}while(nm&&used.has(nm.toLowerCase()));if(!nm)nm='Bot '+bi;used.add(nm.toLowerCase());G.P.push({n:nm,bot:1})}}G.tot=G.P.map(()=>0);G.P.forEach(q=>{q.lv=LV;q.dead=false});deal();bc()}
 function deal(){clearTm();const d=G.deck=mk();G.P.forEach(p=>{p.d=[];if(p.dead){p.s=[];return}p.s=[0,1,2,3].map(()=>{const c=d.pop();c.k=false;return c});if(p.bot)sh([0,1,2,3]).slice(0,2).forEach(i=>p.s[i].k=true)});
-Object.assign(G,{cur:0,cabo:-1,left:0,drawn:null,over:false,busy:false,sel:{},rev:{},pk:{},log:[],ph:'peek0',msg:'',x:null,why:'',lost:null});let c0=(G.round-1)%G.P.length;while(G.P[c0].dead)c0=(c0+1)%G.P.length;G.cur=c0;G.P.forEach((q,i)=>{if(q.dead)G.pk[i]=2})}
+Object.assign(G,{cur:0,cabo:-1,left:0,drawn:null,over:false,busy:false,sel:{},rev:{},pk:{},log:[],ph:'peek0',msg:'',x:null,why:'',lost:null,hl:null,hlp:null});let c0=(G.round-1)%G.P.length;while(G.P[c0].dead)c0=(c0+1)%G.P.length;G.cur=c0;G.P.forEach((q,i)=>{if(q.dead)G.pk[i]=2})}
 const vis=(c,i)=>c?(G.over||(G.rev[i]||[]).includes(c.id)?[c.r,c.s]:0):null;
 function view(i){const cur=G.cur;let m=G.msg;if(G.ph=='peek0')m=!G.pk[i]?'Setup: tap 2 of your 4 cards to peek. Positions never change.':G.pk[i]==1?'Memorize them, then hide.':'Waiting for the other players...';else if(G.ph!='over'&&i!=cur)m=G.P[cur].n+' is playing...';
-return{me:i,sp:G.sp||1,hb:G.P.some(p=>p.bot),tm:(G.ttot||G.ts||0)*1000,tr:G.tEnd&&!G.over?Math.max(0,G.tEnd-Date.now()):null,c:cur,h:G.ph,k:G.kind,st:G.step,cb:G.cabo,o:G.over,dn:G.deck.length,m,lg:G.log.slice(-3),d:G.drawn?(i==cur?[G.drawn.r,G.drawn.s]:0):null,sel:G.sel[i]||[],pk:G.pk[i]||0,rd:G.round,fin:G.final?1:0,lm:G.lv,gm:G.gm,rn:G.rn||0,tt:G.tot,pv:prevI(i),
+return{me:i,hl:G.hl||null,sp:G.sp||1,hb:G.P.some(p=>p.bot),tm:(G.ttot||G.ts||0)*1000,tr:G.tEnd&&!G.over?Math.max(0,G.tEnd-Date.now()):null,c:cur,h:G.ph,k:G.kind,st:G.step,cb:G.cabo,o:G.over,dn:G.deck.length,m,lg:G.log.slice(-3),d:G.drawn?(i==cur?[G.drawn.r,G.drawn.s]:0):null,sel:G.sel[i]||[],pk:G.pk[i]||0,rd:G.round,fin:G.final?1:0,lm:G.lv,gm:G.gm,rn:G.rn||0,tt:G.tot,pv:prevI(i),
 p:G.P.map((q,j)=>({n:q.n,s:q.s.map(c=>vis(c,i)),t:q.d.length?[q.d[q.d.length-1].r,q.d[q.d.length-1].s]:null,off:q.off?1:0,lv:q.lv,dead:q.dead?1:0,lx:G.over&&G.lost?G.lost[j]:undefined,x:G.over&&G.gm!='life'?G.x[j]:undefined,b:G.over?G.b[j]:undefined}))}}
-function bc(){G.P.forEach((p,i)=>!p.bot&&!p.off&&R.emit('sync',{to:p.pid,v:view(i)}))}
+const hlAdd=a=>{(G.hlp=G.hlp||[]).push(...a)};
+function bc(){if(G.hlp&&G.hlp.length){G.hn=(G.hn||0)+1;G.hl={id:G.hn,s:G.hlp};G.hlp=null}G.P.forEach((p,i)=>!p.bot&&!p.off&&R.emit('sync',{to:p.pid,v:view(i)}))}
 const prevI=i=>{let j=i;for(let k=0;k<G.P.length;k++){j=(j+G.P.length-1)%G.P.length;if(!G.P[j].dead&&j!=i)return j}return i};const prevP=()=>G.P[prevI(G.cur)];
 function clearTm(){clearTimeout(G.tm);G.tm=0;G.tEnd=0}
 function startTm(){clearTm();if(!G.ts)return;const id=G.tid,ms=G.ts*1000;G.ttot=G.ts;G.tEnd=Date.now()+ms;G.tm=setTimeout(()=>timeUp(id),ms)}
@@ -420,8 +427,8 @@ else if(a=='ack'&&ph=='ack'){G.rev={};setDisc()}
 else if(a=='drop'&&ph=='disc'){bcSfx('DiscardCard');me.d.push(d);lg(me.n+' discards '+lab(d));G.drawn=null;G.ph='cabo';caboStep()}
 else if(a=='conf'&&ph=='disc'&&sel().length){const k=sel();
 if(k.length==1)put(m,k[0],d);
-else if(k.every(i=>me.s[i].v==me.s[k[0]].v)){fx('match',m,m,k.slice(),null,k.map(i=>[me.s[i].r,me.s[i].s]));k.forEach(i=>me.d.push(me.s[i]));me.s[k[0]]=d;k.slice(1).forEach(i=>me.s[i]=null);lg(me.n+' discards '+k.length+' matching cards and keeps '+lab(d))}
-else{fx('miss',m,m,k.slice(),null,k.length);me.s.push(d);lg('Not matching! '+me.n+' keeps every card plus the drawn one.')}
+else if(k.every(i=>me.s[i].v==me.s[k[0]].v)){fx('match',m,m,k.slice(),null,k.map(i=>[me.s[i].r,me.s[i].s]));k.forEach(i=>me.d.push(me.s[i]));me.s[k[0]]=d;k.slice(1).forEach(i=>me.s[i]=null);hlAdd([[m,k[0],'n'],...k.slice(1).map(i=>[m,i,'x'])]);lg(me.n+' discards '+k.length+' matching cards and keeps '+lab(d))}
+else{fx('miss',m,m,k.slice(),null,k.length);me.s.push(d);hlAdd([[m,me.s.length-1,'n']]);lg('Not matching! '+me.n+' keeps every card plus the drawn one.')}
 G.drawn=null;G.sel={};G.ph='cabo';caboStep()}
 else if(a=='cabo'&&ph=='cabo'&&G.cabo<0){callCabo(m);return endTurn(true)}
 else if(a=='end'&&ph=='cabo')return endTurn(false);
@@ -448,7 +455,7 @@ w=worst()}
 const u=unk(),ks=kn(),grp={};ks.forEach(i=>{(grp[p.s[i].v]=grp[p.s[i].v]||[]).push(i)});
 let bm=null;Object.keys(grp).forEach(v=>{const g=grp[v];if(g.length>1){const gain=g.length*(+v)-c.v;if(gain>0&&(!bm||gain>bm.gain))bm={g,gain}}});
 const g1=w>=0&&c.v<p.s[w].v?p.s[w].v-c.v:0,g2=c.v<=4&&u.length?6.5-c.v:0,pi=ks.find(i=>p.s[i].v==c.v),pt=pi!==undefined&&c.v>=5?(u.length?u[Math.random()*u.length|0]:(w>=0&&w!=pi&&p.s[w].v>=c.v?w:-1)):-1;
-if(bm&&bm.gain>=Math.max(g1,g2)){const g=bm.g.slice();fx('match',me,me,g,null,g.map(i=>[p.s[i].r,p.s[i].s]));g.forEach(i=>p.d.push(p.s[i]));p.s[g[0]]=c;c.k=true;g.slice(1).forEach(i=>p.s[i]=null);lg(p.n+' discards '+g.length+' matching cards and keeps '+lab(c))}
+if(bm&&bm.gain>=Math.max(g1,g2)){const g=bm.g.slice();fx('match',me,me,g,null,g.map(i=>[p.s[i].r,p.s[i].s]));g.forEach(i=>p.d.push(p.s[i]));p.s[g[0]]=c;c.k=true;g.slice(1).forEach(i=>p.s[i]=null);hlAdd([[me,g[0],'n'],...g.slice(1).map(i=>[me,i,'x'])]);lg(p.n+' discards '+g.length+' matching cards and keeps '+lab(c))}
 else if(pt>=0&&c.v>=7)put(me,pt,c);
 else if(g1>0)put(me,w,c);
 else if(g2>0)put(me,u[Math.random()*u.length|0],c);
@@ -537,15 +544,17 @@ function confetti(){for(let i=0;i<60;i++){const d=document.createElement('div');
 function confettiBig(){confetti();setTimeout(confetti,350);setTimeout(confetti,750);setTimeout(confetti,1200)}
 let LT={},LD='',LM='',LO=false,TE=0;
 /* ---------- client rendering ---------- */
-function cardEl(x,o={}){const c=o.cl?` data-a="${o.a||'slot'}" data-p="${o.p}" data-s="${o.s}"`:'',cls='c'+(o.sm?' sm':'')+(o.dc?' dc':'')+(o.cl?' cl':'')+(o.sel?' sel':'')+(o.pile?' pile':'')+(o.pop?' pop':'');
-if(x==null)return`<div class="${cls} em"></div>`;return x===0?`<div class="${cls} bk"${c}></div>`:`<div class="${cls}"${c}><img alt="${x[0]} of ${SN[x[1]]}" src="${img(x[0],x[1])}"></div>`}
+function cardEl(x,o={}){const c=o.cl?` data-a="${o.a||'slot'}" data-p="${o.p}" data-s="${o.s}"`:'',cls='c'+(o.sm?' sm':'')+(o.dc?' dc':'')+(o.cl?' cl':'')+(o.sel?' sel':'')+(o.pile?' pile':'')+(o.pop?' pop':'')+(o.hl?' hl'+o.hl:''),st=o.hl?' style="--he:-'+(o.he||0)+'s'+(RM?';box-shadow:0 0 0 4px #7fe8ff':'')+'"':'';
+if(x==null)return`<div class="${cls} em"${st}></div>`;return x===0?`<div class="${cls} bk"${c}${st}></div>`:`<div class="${cls}"${c}${st}><img alt="${x[0]} of ${SN[x[1]]}" src="${img(x[0],x[1])}"></div>`}
 const guide=()=>`<div class="box"><b>SPECIAL CARD GUIDE</b>${GUIDE.map(g=>`<div class="gd"><b>${g[0]}</b> ${g[3]}</div>`).join('')}<div class="gd">Effects work only on a card drawn from the draw pile.</div></div>`;
 function flow(h){const on={start:0,eff:1,tgt:1,ack:1,disc:2,cabo:3}[h],T=['Draw','Effect / Discard','Place face down','Call CABO'];return`<div class="box"><b>TURN FLOW</b>${T.map((t,i)=>`<div class="st ${on===i?'on':''}"><b>${i+1}</b>${t}</div>`).join('')}</div>`}
+let HLID=null,HLK=null,HLT0=0,HLE=-1;const HL_MS=1800;
+const hlOf=(i,s)=>HLE<0||!HLK?'':HLK.has(i+':'+s+':n')?'n':HLK.has(i+':'+s+':x')?'x':'';
 function fit(){const n=V&&mode=='game'?V.p.length:3,o=Math.max(n-1,1),W=innerWidth,H=innerHeight,nr=W<860,rows=nr?Math.ceil(o/2):o>3?2:1,cols=nr?Math.min(o,2):Math.ceil(o/rows),pw=(W-(nr?0:272)-36-(cols-1)*10)/cols,Hs=H-290;
 const A=Math.min((pw-40)/3.1,nr?99:(Hs-rows*84)/(rows*2+2.8)*.714),B=nr?0:Math.min((pw-62)/5.3,(Hs-rows*84)/(rows+2.8)*.714);
 const b=B>A,wo=Math.max(34,Math.min(b?B:A,nr?60:112)),wy=nr?Math.min(Math.max(wo*1.45,58),84):Math.min(wo*1.4,140),s=document.documentElement.style,set=(k,w)=>{s.setProperty('--'+k+'w',w+'px');s.setProperty('--'+k+'h',w*1.4+'px')};
 set('c',wy);set('o',wo);set('d',wo*1.1);s.setProperty('--oc',cols);s.setProperty('--hw',(b?wo*4+18:wo*2+6)+'px')}
-function render0(){const A=$('#app');ptsSync();if(!$('#alarm')){const e=document.createElement('div');e.id='alarm';document.body.appendChild(e)}document.body.classList.toggle('caboed',!!(V&&mode=='game'&&V.cb>=0&&!V.o));document.body.classList.toggle('inmenu',mode=='menu');fit();const sb=$('#hspd');if(sb){const on=!!(V&&mode=='game'&&V.hb);sb.classList.toggle('on',on);if(on){sb.textContent=V.sp+'x';sb.disabled=V.me!=0;sb.classList.toggle('fast',V.sp>1);sb.classList.toggle('slow',V.sp<1);sb.title=V.me==0?'Bot speed: click to change (1x, 1.5x, 2x, 3x, 0.5x)':'Bot speed (only the host can change it)'}}$('#rnd').textContent=V&&mode=='game'?'ROUND '+V.rd+(V.gm=='score'&&V.rn?'/'+V.rn:''):'';
+function render0(){const A=$('#app');if(V&&V.hl&&V.hl.id!==HLID){HLID=V.hl.id;HLT0=performance.now();HLK=new Set(V.hl.s.map(a=>a.join(':')))}if(!V||!V.hl){HLID=null;HLK=null}HLE=HLK&&performance.now()-HLT0<HL_MS?(performance.now()-HLT0)/1000:-1;ptsSync();if(!$('#alarm')){const e=document.createElement('div');e.id='alarm';document.body.appendChild(e)}document.body.classList.toggle('caboed',!!(V&&mode=='game'&&V.cb>=0&&!V.o));document.body.classList.toggle('inmenu',mode=='menu');fit();const sb=$('#hspd');if(sb){const on=!!(V&&mode=='game'&&V.hb);sb.classList.toggle('on',on);if(on){sb.textContent=V.sp+'x';sb.disabled=V.me!=0;sb.classList.toggle('fast',V.sp>1);sb.classList.toggle('slow',V.sp<1);sb.title=V.me==0?'Bot speed: click to change (1x, 1.5x, 2x, 3x, 0.5x)':'Bot speed (only the host can change it)'}}$('#rnd').textContent=V&&mode=='game'?'ROUND '+V.rd+(V.gm=='score'&&V.rn?'/'+V.rn:''):'';
 if(mode=='menu'){A.innerHTML=`<div id="mn"><div class="fan">${['F','V','M','C'].map((s,i)=>`<img style="--r:${-21+i*14}deg" src="${img('K',s)}" alt="">`).join('')}</div><div class="box big2"><p>Your name</p><input id="nm" maxlength="12" value="${esc(name)}" placeholder="Player"><button data-a="create">Create room</button><hr><p>Room code</p><input id="cd" placeholder="cabo-xxx"><button data-a="join" class="g">Join room</button><hr><button data-a="solo" class="g">Play solo vs bots</button><p class="hint" style="color:var(--dim);font-size:13px">Friends open this same page and enter the room code. The host must keep the page open.</p></div></div>`;fitMenu();return}
 if(mode=='lobby'){const me=L.p.find(p=>p.pid==myPid);A.innerHTML=`<div class="wrap lob"><div class="box lb"><div class="lbm"><div class="big"><span style="color:var(--dim)">ROOM:</span> ${esc(L.code||'solo')}</div>${L.code?'<button class="g" data-a="copy">Copy code</button>':''}${L.p.map(p=>`<div class="pl"><span>${esc(p.n)}${p.pid==myPid?' (you)':''}</span><span class="ok">${IC.dot} READY</span></div>`).join('')}
 ${host?`<p>Seats (bots fill empty ones)</p><select id="ns">${[2,3,4,5,6].map(n=>`<option ${n==NS?'selected':''}>${n}</option>`).join('')}</select>${gmRow()}${GM=='life'?lifeSl():scoreSl()}<p>Turn timer in seconds <b style="color:var(--dim);font-weight:400">(0 will remove the timer)</b></p><div class="tsr"><input type="range" id="ts" min="0" max="60" step="5" value="${TS}" aria-label="Turn timer"><input type="number" id="tn" min="0" max="60" step="5" value="${TS}" inputmode="numeric" aria-label="Turn timer in seconds"></div><ul class="nl"><li>If a turn timer runs out, a card is discarded and the turn is skipped.</li><li>Default setting is the intended experience, however no timer is recommended for first time playing!</li></ul></div><div class="lbb"><div class="btns"><button data-a="start">${IC.play} Start game</button><button class="g" data-a="defaults">${IC.reset} Default</button></div></div>`:`${gmInfo()}<p style="color:var(--dim)">Turn timer: ${TS?TS+' seconds':'off'}</p><p>Waiting for the host to start...</p></div>`}</div>${guide()}</div>`;return}
@@ -553,7 +562,7 @@ if(!V)return;const v=V,me=v.me,n=v.p.length,mine=v.c==me&&!v.o,h=v.h,prev=v.pv;
 const can=(p,s)=>{if(v.p[p].s[s]==null||v.o)return false;if(h=='peek0')return p==me&&v.pk==0;if(!mine)return false;if(h=='disc')return p==me;if(h=='tgt'){const t=STEPS[v.k][v.st];return t=='o'?p==me:t=='x'?p!=me:true}return false};
 const panel=i=>{const q=v.p[i],you=i==me,sg=JSON.stringify(q.t),pp=LT[i]!=null&&LT[i]!==sg&&q.t,take=(LT[i]=sg,mine&&h=='start'&&i==prev&&q.t),tm=v.c==i&&!v.o&&h!='peek0'&&v.tr!=null?'<span class="tmr" id="tm"><span>'+Math.ceil(Math.max(0,TE-performance.now())/1000)+'</span></span>':'';
 return`<div class="pn ${you?'you':''} ${v.c==i&&!v.o&&h!='peek0'?'cur':''}${v.cb==i?' cabop':''}${q.dead?' dead':''}" data-seat="${i}" style="--ac:${COL[i%6]}">${v.cb==i?'<div class="cbrib">CABO!</div>':''}<div class="av">${AV[i%6]}</div><div class="nm">${you?'YOU':esc(q.n)}${v.cb==i?' <b class="tag">CABO</b>':''}${nmInfo(i,q)}${q.dead?'<small class="rs" style="color:#ff8a8a">OUT</small>':''}${q.off?'<small class="rs" style="color:#ff8a8a">OFFLINE</small>':''}${tm}</div>
-<div class="hand">${q.s.map((x,s)=>cardEl(x,{cl:can(i,s),p:i,s,sel:you&&v.sel.includes(s)&&h!='tgt',sm:!you})).join('')}</div>
+<div class="hand">${q.s.map((x,s)=>cardEl(x,{cl:can(i,s),p:i,s,sel:you&&v.sel.includes(s)&&h!='tgt',sm:!you,hl:hlOf(i,s),he:HLE})).join('')}</div>
 <div class="dp"><small>${take?'take':'discard'}</small>${q.t?cardEl(q.t,{dc:1,cl:take,a:'take',p:i,s:0,pop:pp}):'<div class="c dc em"></div>'}</div></div>`};
 let b='';if(h=='peek0'&&v.pk==1)b='<button data-a="hide">Hide and start</button>';
 if(mine){if(h=='eff')b='<button data-a="use">'+IC.play+' Use effect</button><button class="g" data-a="skip">Skip effect</button>';
